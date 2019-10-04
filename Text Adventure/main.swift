@@ -13,10 +13,6 @@ import Foundation
 //impliment enemy combat skill
 
 
-/*
- hello
- */
-
 
 
 let speechLines: [String] = ["Persona!", "Arsene!","Come!", "Let's go."]
