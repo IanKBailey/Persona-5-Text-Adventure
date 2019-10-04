@@ -85,6 +85,9 @@ func rakundaDrop () {
 
 print("Welcome to the Persona 5 combat sim")
 sleep(1)
+print("You are Joker: The Leader of the Phantom Thieves")
+sleep(1)
+print("Fight hard to defeat your foe and use your Persona: Arsene, to unleash powerful attacks!")
 difficultySelectLoop: while pixie.health >= 0 {
     print("Choose your Difficulty: Enter 1 or 2")
     let difficulty = readLine()!
@@ -109,6 +112,7 @@ difficultySelectLoop: while pixie.health >= 0 {
             case "item".lowercased() :
                 if itemCount > 0 {
                     items()
+                    sleep(1)
                 } else {
                     print("ran out of Items")
                 }
@@ -210,6 +214,7 @@ difficultySelectLoop: while pixie.health >= 0 {
                         if itemCount > 0 {
                             items()
                             turn += 1
+                            sleep(1)
                         } else {
                             print("ran out of Items")
                         }
