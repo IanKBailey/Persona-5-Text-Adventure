@@ -11,23 +11,20 @@ import Foundation
 //Persona 5 combat sim
 
 //impliment enemy combat skill
-//check rubric for completion
+
 
 /*
- 
- Use a for loop in your code
- Have at least one opportunity where the user will enter a number (see converting Strings to numbers)
- 
  */
 
 
 
 let speechLines: [String] = ["Persona!", "Arsene!","Come!", "Let's go."]
+var turn = 0
 var itemCount = 6
 var rakundaCount = 0
-var joker = (hattack: 50.0, hdefense: 50.0, health: 3000.0, sp: 50.0)
-var pixie = (e1attack: 60.0, e1defense: 100.0, health: 100.0)
-var archAngel = (e2attack: 70.0, e2defense: 200.0, health: 200.0)
+var joker = (hattack: 100.0, hdefense: 150.0, health: 350.0, sp: 60.0)
+var pixie = (e1attack: 60.0, e1defense: 100.0, health: 200.0)
+var archAngel = (e2attack: 70.0, e2defense: 200.0, health: 400.0)
 var itemHeal = Double((60...100).randomElement() ?? 1)
 
 func items () {
@@ -37,9 +34,9 @@ func items () {
 }
 
 func eiha () {
-    joker.sp -= 4
-    pixie.health -= 100
-    archAngel.health -= 200
+    joker.sp -= 12
+    pixie.health -= 50
+    archAngel.health -= 75
 }
 
 
@@ -53,11 +50,21 @@ func pixieAttack () {
 }
 
 func archAngelAttack () {
+    if turn % 3 != 0 {
+        print("Enemy attacks")
     joker.health -= ((archAngel.e2attack) * (100/(100+joker.hdefense))).rounded()
+}
+}
+
+func archAngelSpecial () {
+    if turn % 3 == 0 {
+        print("ArchAngel Uses Cleave!")
+        joker.health -= ((archAngel.e2attack * 2.5) * (100/(100+joker.hdefense))).rounded()
+}
 }
 
 func rakunda () {
-joker.sp -= 12
+joker.sp -= 15
 if pixie.e1defense > 50 && joker.sp > 10  {
     pixie.e1defense = (pixie.e1defense / 2)
     archAngel.e2defense = (archAngel.e2defense / 2)
@@ -77,7 +84,7 @@ func rakundaDrop () {
 }
 
 print("Welcome to the Persona 5 combat sim")
-
+sleep(1)
 difficultySelectLoop: while pixie.health >= 0 {
     print("Choose your Difficulty: Enter 1 or 2")
     let difficulty = readLine()!
@@ -97,6 +104,7 @@ difficultySelectLoop: while pixie.health >= 0 {
                 if pixie.health > 0 {
                     attack()
                     print("Pixie has \(pixie.health)HP remaining")
+                    sleep(1)
                     }
             case "item".lowercased() :
                 if itemCount > 0 {
@@ -117,6 +125,7 @@ difficultySelectLoop: while pixie.health >= 0 {
                     if joker.sp >= 4 {
                         eiha()
                         print("Pixie has \(pixie.health)HP remaining")
+                        sleep(1)
                     } else {
                         print("not enough sp")
                     }
@@ -125,8 +134,10 @@ difficultySelectLoop: while pixie.health >= 0 {
                     if joker.sp >= 10 {
                         rakunda()
                         print("enemy defense fell")
+                        sleep(1)
                     } else {
                         print("not enough sp")
+                        sleep(1)
                     }
                     
                     
@@ -142,7 +153,9 @@ difficultySelectLoop: while pixie.health >= 0 {
             if joker.health > 0 {
                 rakundaDrop()
                 pixieAttack()
+                sleep(1)
                 print("Joker has \(joker.health)HP remaining")
+                sleep(1)
             }
             
             if joker.health <= 0 {
@@ -158,9 +171,10 @@ difficultySelectLoop: while pixie.health >= 0 {
                 let playAgain = readLine()!.lowercased()
                 switch playAgain {
                 case "y":
-                    joker = (hattack: 50.0, hdefense: 50.0, health: 3000.0, sp: 50.0)
-                    pixie = (e1attack: 60.0, e1defense: 100.0, health: 100.0)
-                    archAngel = (e2attack: 70.0, e2defense: 200.0, health: 100.0)
+                    turn = 0
+                    joker = (hattack: 100.0, hdefense: 150.0, health: 350.0, sp: 60.0)
+                    pixie = (e1attack: 60.0, e1defense: 100.0, health: 200.0)
+                    archAngel = (e2attack: 70.0, e2defense: 200.0, health: 400.0)
                     continue difficultySelectLoop
                 case "n" :
                     exit(32)
@@ -174,9 +188,11 @@ difficultySelectLoop: while pixie.health >= 0 {
 
         
     case "2" :
-        print("ArchAngel selected")
+        print("Archangel selected")
         sleep(1)
-        print("ArchAngel draws near!")
+        print("The Archangel use a powerful attack every 3 turns! Use the Item command to Heal through it.")
+        sleep(1)
+        print("Archangel draws near!")
         sleep(1)
         combatLoopAA: while archAngel.health >= 0 {
                 
@@ -186,11 +202,14 @@ difficultySelectLoop: while pixie.health >= 0 {
                     case "attack".lowercased():
                         if archAngel.health > 0 {
                             attack()
-                            print("ArchAngel has \(archAngel.health)HP remaining")
+                            turn += 1
+                            print("Archangel has \(archAngel.health)HP remaining")
+                            sleep(1)
                             }
                     case "item".lowercased() :
                         if itemCount > 0 {
                             items()
+                            turn += 1
                         } else {
                             print("ran out of Items")
                         }
@@ -206,7 +225,9 @@ difficultySelectLoop: while pixie.health >= 0 {
                         case "eiha":
                             if joker.sp >= 4 {
                                 eiha()
-                                print("ArchAngel has \(archAngel.health)HP remaining")
+                                turn += 1
+                                print("Archangel has \(archAngel.health)HP remaining")
+                                sleep(1)
                             } else {
                                 print("not enough sp")
                             }
@@ -214,6 +235,7 @@ difficultySelectLoop: while pixie.health >= 0 {
                         case "rakunda":
                             if joker.sp >= 10 {
                                 rakunda()
+                                turn += 1
                                 print("enemy defense fell")
                             } else {
                                 print("not enough sp")
@@ -232,7 +254,10 @@ difficultySelectLoop: while pixie.health >= 0 {
                     if joker.health > 0 {
                         rakundaDrop()
                         archAngelAttack()
+                        archAngelSpecial()
+                        sleep(1)
                         print("Joker has \(joker.health)HP remaining")
+                        sleep(1)
                     }
                     
                     if joker.health <= 0 {
@@ -248,9 +273,9 @@ difficultySelectLoop: while pixie.health >= 0 {
                      print ("Enter your name!")
                             let name = readLine()!
                             sleep(1)
-                     print("Enter your age!")
-                    let age = readLine()!
-                    if let ageForced = Int(age) {
+                        print("Enter your age!")
+                        let age = readLine()!
+                        if let ageForced = Int(age) {
                         
                             sleep(1)
                          
